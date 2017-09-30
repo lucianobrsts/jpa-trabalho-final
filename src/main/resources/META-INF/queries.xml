@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+                                     http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
+	version="2.1">
+
+	<!-- JPQL - Todos os produtos -->
+	<named-query name="Produto.todos">
+		<query>
+			SELECT p FROM Produto p
+		</query>
+	</named-query>
+
+	<!-- JPQL - Avaliações que possuem Issues com mais de 3 votos. Obs: evitar 
+		registros duplicados -->
+	<named-query name="Avaliacao.issuesAcima3Votos">
+		<query>
+			SELECT a FROM Avaliacao a
+			JOIN TREAT (a.itensAvaliacao as Issue) i
+			WHERE i.quantidadeDeVotos > 3
+		</query>
+	</named-query>
+
+
+	<!-- JPQL - Quantidade de debitos tecnicos abertos e fechados para um determinado 
+		produto. Obs: O resultado deve ser o total associado com cada status -->
+	<named-query name="Produto.qtdeDebitosTecnicos">
+		<query>
+			SELECT COUNT(dt) FROM Avaliacao a
+			JOIN a.produto p
+			JOIN TREAT(a.itensAvaliacao as DebitoTecnico) dt
+			WHERE p.id = :idProduto
+			GROUP BY dt.status
+		</query>
+	</named-query>
+
+
+	<!-- SQL - Departamento que possui o maior número de avaliações. Obs: O resultado deve ser a entidade -->
+
+
+</entity-mappings>
